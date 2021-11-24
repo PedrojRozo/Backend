@@ -15,6 +15,15 @@ export class Surculsal extends Entity {
   })
   nombre: string;
 
+  @property({
+    type: 'string',
+  })
+  consecionariaId?: string;
+
+  @property({
+    type: 'string',
+  })
+  departamentoId?: string;
 
   constructor(data?: Partial<Surculsal>) {
     super(data);

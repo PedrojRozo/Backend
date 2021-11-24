@@ -1,4 +1,6 @@
-import {Entity, model, property} from '@loopback/repository';
+import {Entity, model, property, hasMany} from '@loopback/repository';
+import {TipoVehiculo} from './tipo-vehiculo.model';
+import {Surculsal} from './surculsal.model';
 
 @model()
 export class Consecionaria extends Entity {
@@ -21,6 +23,11 @@ export class Consecionaria extends Entity {
   })
   descripcion: string;
 
+  @hasMany(() => TipoVehiculo)
+  tipoVehiculos: TipoVehiculo[];
+
+  @hasMany(() => Surculsal)
+  surculsals: Surculsal[];
 
   constructor(data?: Partial<Consecionaria>) {
     super(data);

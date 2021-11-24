@@ -15,6 +15,10 @@ export class Ciudad extends Entity {
   })
   nombre: string;
 
+  @property({
+    type: 'string',
+  })
+  departamentoId?: string;
 
   constructor(data?: Partial<Ciudad>) {
     super(data);
