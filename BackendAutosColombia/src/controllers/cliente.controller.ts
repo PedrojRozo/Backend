@@ -1,3 +1,4 @@
+import { service } from '@loopback/core';
 import {
   Count,
   CountSchema,
@@ -20,10 +21,19 @@ import {
 import {Cliente} from '../models';
 import {ClienteRepository} from '../repositories';
 
+// Importar los servicios creados
+import { AutenticacionService } from '../services';
+
+// Importar para consumir url
+const fetch = require('node-fetch');
 export class ClienteController {
   constructor(
     @repository(ClienteRepository)
     public clienteRepository : ClienteRepository,
+
+    /*Para usar un servicio en especifico en el modelo*/
+    @service(AutenticacionService)
+    public servicoAutenticacion : AutenticacionService
   ) {}
 
   @post('/clientes')
@@ -44,7 +54,25 @@ export class ClienteController {
     })
     cliente: Omit<Cliente, 'id'>,
   ): Promise<Cliente> {
-    return this.clienteRepository.create(cliente);
+
+    // Usar el servicio
+    let clave = this.servicoAutenticacion.GenerarClave();
+    let claveCifrada = this.servicoAutenticacion.CifrarClave(clave);
+    cliente.contrasena = claveCifrada;
+    let c = await this.clienteRepository.create(cliente);
+
+    // Notificar al cliente por correo
+    let destino = cliente.correo;
+    let asunto = 'Registro del cliente en la plataforma';
+    let mensaje = `Hola ${cliente.nombre}, su nombre de usuario es: ${cliente.correo} y su clave es ${clave}`;
+
+    // Url del servicio
+    // Metodo get
+    fetch(`http://127.0.0.1:5000/envio-correo?email=${destino}&subject=${asunto}&messages=${mensaje}`)
+    .then((data: any) => {
+      console.log(data);
+    });
+    return c;
   }
 
   @get('/clientes/count')
