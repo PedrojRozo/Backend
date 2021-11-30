@@ -27,6 +27,18 @@ export class Asesor extends Entity {
     type: 'string',
     required: true,
   })
+  tipoDocumento: string;
+
+  @property({
+    type: 'string',
+    required: true,
+  })
+  numeroDocumento: string;
+  
+  @property({
+    type: 'string',
+    required: true,
+  })
   correo: string;
 
   @property({
