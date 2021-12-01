@@ -17,8 +17,14 @@ import {
   del,
   requestBody,
   response,
+  HttpErrors,
 } from '@loopback/rest';
+
+// Importar Url base para consumir servicios
+import { Llaves } from '../config/llaves';
+
 import {Cliente} from '../models';
+import { Credenciales } from '../models/credenciales.model';
 import {ClienteRepository} from '../repositories';
 
 // Importar los servicios creados
@@ -35,6 +41,34 @@ export class ClienteController {
     @service(AutenticacionService)
     public servicoAutenticacion : AutenticacionService
   ) {}
+
+  // Para identificar el cliente
+  @post("/identificarCliente", {
+    responses:{
+      '200':{
+        description: "Identificación de cliente"
+      }
+    }
+  })
+  async identificarCliente(
+    @requestBody() credenciales: Credenciales
+  ){
+    let c = await this.servicoAutenticacion.IdentifcarCliente(credenciales.usuario, credenciales.clave);
+    if (c) {
+      let token = this.servicoAutenticacion.GenerarTokenJWT(c);
+      return {
+        datos:{
+          nombre: c.nombre,
+          correo: c.correo,
+          id: c.id
+        },
+        tk: token
+      }
+    } else {
+      // Mensaje de error a cliente no autorizado
+      throw new HttpErrors[401]("datos Invalidos");
+    }
+  }
 
   @post('/clientes')
   @response(200, {
@@ -68,7 +102,7 @@ export class ClienteController {
 
     // Url del servicio
     // Metodo get
-    fetch(`http://127.0.0.1:5000/envio-correo?email=${destino}&subject=${asunto}&messages=${mensaje}`)
+    fetch(`${Llaves.urlServicioNotificaciones}/envio-correo?email=${destino}&subject=${asunto}&messages=${mensaje}`)
     .then((data: any) => {
       console.log(data);
     });

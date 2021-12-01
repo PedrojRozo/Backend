@@ -8,3 +8,4 @@ export * from './surculsal.model';
 export * from './departamento.model';
 export * from './ciudad.model';
 export * from './solicitud.model';
+export * from './credenciales.model';
