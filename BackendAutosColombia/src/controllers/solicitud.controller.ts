@@ -19,13 +19,17 @@ import {
 } from '@loopback/rest';
 import {Solicitud} from '../models';
 import {SolicitudRepository} from '../repositories';
+import {authenticate} from '@loopback/authentication';
 
+// Por aqui @authenticate("admin") para restrigir toda la clase
 export class SolicitudController {
   constructor(
     @repository(SolicitudRepository)
     public solicitudRepository : SolicitudRepository,
   ) {}
 
+  // Para permitir el acceso al usuario definido
+  @authenticate("admin")
   @post('/solicituds')
   @response(200, {
     description: 'Solicitud model instance',
@@ -46,7 +50,8 @@ export class SolicitudController {
   ): Promise<Solicitud> {
     return this.solicitudRepository.create(solicitud);
   }
-
+  
+  // @authenticate.skip() Para desbloquer solo uno en caso de registringir toda la clase
   @get('/solicituds/count')
   @response(200, {
     description: 'Solicitud model count',
