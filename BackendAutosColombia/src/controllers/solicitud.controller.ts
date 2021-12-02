@@ -29,7 +29,7 @@ export class SolicitudController {
   ) {}
 
   // Para permitir el acceso al usuario definido
-  @authenticate("admin")
+  @authenticate("cliente")
   @post('/solicituds')
   @response(200, {
     description: 'Solicitud model instance',
