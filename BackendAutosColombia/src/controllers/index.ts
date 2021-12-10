@@ -22,3 +22,4 @@ export * from './surcursal.controller';
 export * from './consecionaria.controller';
 export * from './departamento.controller';
 export * from './ciudad.controller';
+export * from './administrador.controller';

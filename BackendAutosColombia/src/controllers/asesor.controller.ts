@@ -1,3 +1,4 @@
+import { service } from '@loopback/core'
 import {
   Count,
   CountSchema,
@@ -16,15 +17,58 @@ import {
   del,
   requestBody,
   response,
+  HttpErrors,
 } from '@loopback/rest';
+
+// Importar Url base para consumir servicios
+import { Llaves } from '../config/llaves';
+
 import {Asesor} from '../models';
+import { Credenciales } from '../models/credenciales.model';
 import {AsesorRepository} from '../repositories';
 
+// Importar los servicios creados
+import { AutenticacionService } from '../services';
+
+// Importar para consumir url
+const fetch = require('node-fetch');
 export class AsesorController {
   constructor(
     @repository(AsesorRepository)
     public asesorRepository : AsesorRepository,
+
+    /*Para usar un servicio en especifico en el modelo*/
+    @service(AutenticacionService)
+    public servicoAutenticacion : AutenticacionService
   ) {}
+
+  // Para identificar el asesor
+  @post("/identificarAsesor", {
+    responses:{
+      '200':{
+        description: "Identificación de asesor"
+      }
+    }
+  })
+  async identificarAsesor(
+    @requestBody() credenciales: Credenciales
+  ){
+    let c = await this.servicoAutenticacion.IdentifcarAsesor(credenciales.usuario, credenciales.clave);
+    if (c) {
+      let token = this.servicoAutenticacion.GenerarTokenJWT(c);
+      return {
+        datos:{
+          nombre: c.nombre,
+          correo: c.correo,
+          id: c.id
+        },
+        tk: token
+      }
+    } else {
+      // Mensaje de error a asesor no autorizado
+      throw new HttpErrors[401]("datos Invalidos");
+    }
+  }
 
   @post('/asesors')
   @response(200, {
@@ -44,7 +88,25 @@ export class AsesorController {
     })
     asesor: Omit<Asesor, 'id'>,
   ): Promise<Asesor> {
-    return this.asesorRepository.create(asesor);
+
+    // Usar el servicio
+    let clave = this.servicoAutenticacion.GenerarClave();
+    let claveCifrada = this.servicoAutenticacion.CifrarClave(clave);
+    asesor.contrasena = claveCifrada;
+    let c = await this.asesorRepository.create(asesor);
+
+    // Notificar al asesor por correo
+    let destino = asesor.correo;
+    let asunto = 'Registro del asesor en la plataforma';
+    let mensaje = `Hola ${asesor.nombre}, su nombre de usuario es: ${asesor.correo} y su clave es ${clave}`;
+      
+    // Url del servicio
+    // Metodo get
+    fetch(`${Llaves.urlServicioNotificaciones}/envio-correo?email=${destino}&subject=${asunto}&messages=${mensaje}`)
+    .then((data: any) => {
+      console.log(data);
+     });
+     return c;
   }
 
   @get('/asesors/count')

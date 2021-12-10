@@ -40,6 +40,7 @@ export class ClienteController {
     /*Para usar un servicio en especifico en el modelo*/
     @service(AutenticacionService)
     public servicoAutenticacion : AutenticacionService
+
   ) {}
 
   // Para identificar el cliente
@@ -103,7 +104,7 @@ export class ClienteController {
     // Url del servicio
     // Metodo get
     fetch(`${Llaves.urlServicioNotificaciones}/envio-correo?email=${destino}&subject=${asunto}&messages=${mensaje}`)
-    .then((data: any) => {
+    .then((data: any)=> {
       console.log(data);
     });
     return c;
