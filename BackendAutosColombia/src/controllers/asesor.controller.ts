@@ -53,14 +53,14 @@ export class AsesorController {
   async identificarAsesor(
     @requestBody() credenciales: Credenciales
   ){
-    let c = await this.servicoAutenticacion.IdentifcarAsesor(credenciales.usuario, credenciales.clave);
-    if (c) {
-      let token = this.servicoAutenticacion.GenerarTokenJWT(c);
+    let a = await this.servicoAutenticacion.IdentifcarAsesor(credenciales.usuario, credenciales.clave);
+    if (a) {
+      let token = this.servicoAutenticacion.GenerarTokenJWTAsesor(a);
       return {
         datos:{
-          nombre: c.nombre,
-          correo: c.correo,
-          id: c.id
+          nombre: a.nombre,
+          correo: a.correo,
+          id: a.id
         },
         tk: token
       }

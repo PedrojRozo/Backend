@@ -1,8 +1,8 @@
 import {injectable, /* inject, */ BindingScope} from '@loopback/core';
 import { repository } from '@loopback/repository';
 import { Llaves } from '../config/llaves';
-import { Cliente } from '../models';
-import { ClienteRepository } from '../repositories';
+import { Administrador, Asesor, Cliente } from '../models';
+import { AdministradorRepository, AsesorRepository, ClienteRepository } from '../repositories';
 
 // Paquete para generar claves aletoreas
 const generador = require("password-generator");
@@ -17,7 +17,9 @@ export class AutenticacionService {
   constructor(
     /* Se llama el repositorio para acceder a este */
     @repository(ClienteRepository)
-    public clienteRepository: ClienteRepository
+    public clienteRepository: ClienteRepository,
+    public asesorRepository: AsesorRepository,
+    public administradorRepository: AdministradorRepository
   ){}
 
   /*
@@ -49,6 +51,30 @@ export class AutenticacionService {
     }
   }
 
+  async IdentifcarAsesor(usuario: string, contrasena: string){
+    try {
+      let a = await this.asesorRepository.findOne({where:{correo: usuario, contrasena: contrasena}});
+      if (a) {
+        return a;
+      }
+      return false;
+    } catch (error) {
+      return false;
+    }
+  }
+
+  async IdentifcarAdministrador(usuario: string, contrasena: string){
+    try {
+      let ad = await this.administradorRepository.findOne({where:{correo: usuario, contrasena: contrasena}});
+      if (ad) {
+        return ad;
+      }
+      return false;
+    } catch (error) {
+      return false;
+    }
+  }
+  
   GenerarTokenJWT(cliente: Cliente){
 
     // Datos a firmar 
@@ -57,6 +83,34 @@ export class AutenticacionService {
         id: cliente.id,
         correo: cliente.correo,
         nombre: cliente.nombre + " " + cliente.apellido,
+      }
+    },
+    Llaves.claveJWT);
+    return token;
+  }
+
+  GenerarTokenJWTAsesor(asesor: Asesor){
+
+    // Datos a firmar 
+    let token = jwt.sign({
+      data:{
+        id: asesor.id,
+        correo: asesor.correo,
+        nombre: asesor.nombre + " " + asesor.apellido,
+      }
+    },
+    Llaves.claveJWT);
+    return token;
+  }
+
+  GenerarTokenJWTAdministrador(administrador: Administrador){
+
+    // Datos a firmar 
+    let token = jwt.sign({
+      data:{
+        id: administrador.id,
+        correo: administrador.correo,
+        nombre: administrador.nombre + " " + administrador.apellido,
       }
     },
     Llaves.claveJWT);

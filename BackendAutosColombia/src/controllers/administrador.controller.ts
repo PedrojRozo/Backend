@@ -54,14 +54,14 @@ export class AdministradorController {
   async identificarAdministrador(
     @requestBody() credenciales: Credenciales
   ){
-    let c = await this.servicoAutenticacion.IdentifcarAdministrador(credenciales.usuario, credenciales.clave);
-    if (c) {
-      let token = this.servicoAutenticacion.GenerarTokenJWT(c);
+    let ad = await this.servicoAutenticacion.IdentifcarAdministrador(credenciales.usuario, credenciales.clave);
+    if (ad) {
+      let token = this.servicoAutenticacion.GenerarTokenJWTAdministrador(ad);
       return {
         datos:{
-          nombre: c.nombre,
-          correo: c.correo,
-          id: c.id
+          nombre: ad.nombre,
+          correo: ad.correo,
+          id: ad.id
         },
         tk: token
       }
