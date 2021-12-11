@@ -43,7 +43,7 @@ export class Asesor extends Entity {
 
   @property({
     type: 'string',
-    required: true,
+    required: false,
   })
   contrasena: string;
 
