@@ -102,7 +102,7 @@ export class ClienteController {
 
     // Url del servicio
     // Metodo get
-    fetch(`${Llaves.urlServicioNotificaciones}/envio-correo?email=${destino}&subject=${asunto}&messages=${mensaje}`)
+    fetch(`${Llaves.urlServicioNotificaciones}/envio-correo?correo_destino=${destino}&subject=${asunto}&messages=${mensaje}`)
     .then((data: any) => {
       console.log(data);
     });
