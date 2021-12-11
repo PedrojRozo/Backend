@@ -4,7 +4,7 @@ import { Llaves } from '../config/llaves';
 import { Administrador, Asesor, Cliente } from '../models';
 import { AdministradorRepository, AsesorRepository, ClienteRepository } from '../repositories';
 
-// Paquete para generar claves aletoreas
+// Paquete para generar claves aleatoreas
 const generador = require("password-generator");
 
 // paquete para Cifrar claves
@@ -34,7 +34,7 @@ export class AutenticacionService {
     return clave;
   }
 
-  CifrarClave(clave: string){
+  CifrarClave(clave: string) {
     let claveCifrada = cryptoJS.MD5(clave).toString();
     return claveCifrada;
   }
