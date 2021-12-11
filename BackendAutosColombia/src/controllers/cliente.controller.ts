@@ -211,3 +211,27 @@ export class ClienteController {
     await this.clienteRepository.deleteById(id);
   }
 }
+
+
+SwaggerUI({
+  //  ...other configuration options,
+  plugins: [function UrlParamDisablePlugin() {
+    return {
+      statePlugins: {
+        spec: {
+          wrapActions: {
+            // Remove the ?url parameter from loading an external OpenAPI definition.
+            updateUrl: (oriAction) => (payload) => {
+              const url = new URL(window.location.href)
+              if (url.searchParams.has('url')) {
+                url.searchParams.delete('url')
+                window.location.replace(url.toString())
+              }
+              return oriAction(payload)
+            }
+          }
+        }
+      }
+    }
+  }],
+})
