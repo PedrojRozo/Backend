@@ -4,8 +4,8 @@ import { HttpErrors, Request } from "@loopback/rest";
 import { UserProfile } from "@loopback/security";
 import  parseBearerToken  from 'parse-bearer-token';
 import { AutenticacionService } from '../services';
-export class EstragiaAdminitador implements AuthenticationStrategy{
-    name: string = 'admin';
+export class EstragiaCliente implements AuthenticationStrategy{
+    name: string = 'cliente';
 
     // Se crea un constructor para inyectar algunas funciones
     constructor(
