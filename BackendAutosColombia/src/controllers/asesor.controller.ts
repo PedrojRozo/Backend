@@ -93,7 +93,7 @@ export class AsesorController {
     let clave = this.servicoAutenticacion.GenerarClave();
     let claveCifrada = this.servicoAutenticacion.CifrarClave(clave);
     asesor.contrasena = claveCifrada;
-    let c = await this.asesorRepository.create(asesor);
+    let a = await this.asesorRepository.create(asesor);
 
     // Notificar al asesor por correo
     let destino = asesor.correo;
@@ -106,7 +106,7 @@ export class AsesorController {
     .then((data: any) => {
       console.log(data);
      });
-     return c;
+     return a;
   }
 
   @get('/asesors/count')

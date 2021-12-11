@@ -94,7 +94,7 @@ export class AdministradorController {
     let clave = this.servicoAutenticacion.GenerarClave();
     let claveCifrada = this.servicoAutenticacion.CifrarClave(clave);
     administrador.contrasena = claveCifrada;
-    let c = await this.administradorRepository.create(administrador);
+    let ad = await this.administradorRepository.create(administrador);
 
     // Notificar al administrador por correo
     let destino = administrador.correo;
@@ -107,7 +107,7 @@ export class AdministradorController {
     .then((data: any) => {
       console.log(data);
     });
-    return c;
+    return ad;
   }
 
   @get('/administradors/count')
