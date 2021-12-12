@@ -90,15 +90,15 @@ export class ClienteController {
   ): Promise<Cliente> {
 
     // Usar el servicio
-    let clave = this.servicoAutenticacion.GenerarClave();
+    /* let clave = this.servicoAutenticacion.GenerarClave();
     let claveCifrada = this.servicoAutenticacion.CifrarClave(clave);
-    cliente.contrasena = claveCifrada;
+    cliente.contrasena = claveCifrada; */
     let c = await this.clienteRepository.create(cliente);
 
     // Notificar al cliente por correo
     let destino = cliente.correo;
-    let asunto = 'Registro del cliente en la plataforma';
-    let mensaje = `Hola ${cliente.nombre}, su nombre de usuario es: ${cliente.correo} y su clave es ${clave}`;
+    let asunto = 'Registro del cliente en la plataforma Autos Colombia';
+    let mensaje = `Hola ${cliente.nombre}, su nombre de usuario es: ${cliente.correo} y su clave es ${cliente.contrasena}`;
 
     // Url del servicio
     // Metodo get

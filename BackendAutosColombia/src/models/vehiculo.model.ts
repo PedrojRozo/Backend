@@ -18,7 +18,7 @@ export class Vehiculo extends Entity {
 
   @property({
     type: 'string',
-    required: true,
+    required: false,
   })
   estado: string;
 
