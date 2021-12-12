@@ -33,6 +33,7 @@ import { AutenticacionService } from '../services';
 
 // Importar para consumir url
 const fetch = require('node-fetch');
+@authenticate("cliente")
 export class ClienteController {
   constructor(
     @repository(ClienteRepository)
@@ -72,7 +73,6 @@ export class ClienteController {
   }
 
 
-  @authenticate("cliente")
   @post('/clientes')
   @response(200, {
     description: 'Cliente model instance',
